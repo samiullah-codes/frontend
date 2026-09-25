@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Automation Portal</title>
+    <style>
+        :root {
+            --primary: #075e54;
+            --primary-hover: #128c7e;
+            --whatsapp-green: #25d366;
+            --bg-color: #efeae2;
+            --card-bg: #ffffff;
+            --text-main: #333333;
+            --text-muted: #666666;
+            --border-color: #d1d7db;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 550px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            margin-bottom: 25px;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+        }
+
+        h2 {
+            color: var(--primary);
+            margin-top: 0;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 22px;
+            font-weight: 700;
+            border-bottom: 2px solid #f0f2f5;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: var(--text-main);
+            font-size: 13px;
+        }
+
+        input[type="text"], 
+        textarea, 
+        input[type="file"],
+        input[type="datetime-local"] {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            box-sizing: border-box;
+            transition: all 0.3s;
+            background-color: #fafafa;
+        }
+
+        input[type="text"]:focus, 
+        textarea:focus,
+        input[type="datetime-local"]:focus {
+            border-color: var(--whatsapp-green);
+            background-color: #fff;
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(37, 211, 102, 0.1);
+        }
+
+        input[type="file"] {
+            padding: 8px;
+            background: #fff;
+            cursor: pointer;
+        }
+
+        small {
+            display: block;
+            margin-top: 4px;
+            color: var(--text-muted);
+            font-size: 11px;
+        }
+
+        button {
+            width: 100%;
+            background-color: var(--whatsapp-green);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.1s;
+            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.2);
+            margin-top: 5px;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .response-msg {
+            margin-top: 12px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+            min-height: 18px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- 1. Registration Card -->
+        <div class="card">
+            <h2>📱 WhatsApp Registration</h2>
+            <form id="regForm">
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="text" id="phone" name="phone_number" placeholder="e.g. 923001234567" required>
+                </div>
+                <button type="submit">Register Number</button>
+            </form>
+            <div id="regResponse" class="response-msg"></div>
+        </div>
+
+        <!-- 2. Send Message Card -->
+        <div class="card">
+            <h2>💬 Send WhatsApp Message</h2>
+            <form id="msgForm">
+                <div class="form-group">
+                    <label for="recipientPhone">Recipient Phone Number</label>
+                    <input type="text" id="recipientPhone" name="recipient_phone" placeholder="e.g. 923001234567" required>
+                </div>
+                <div class="form-group">
+                    <label for="messageText">Message Content</label>
+                    <textarea id="messageText" name="message" rows="3" placeholder="Type your message here..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="msgTime">Send Time (Optional)</label>
+                    <input type="datetime-local" id="msgTime" name="send_time">
+                    <small>Leave blank for immediate sending.</small>
+                </div>
+                <button type="submit">Send Message</button>
+            </form>
+            <div id="msgResponse" class="response-msg"></div>
+        </div>
+
+        <!-- 3. Send PDF Card -->
+        <div class="card">
+            <h2>📄 Send PDF Document</h2>
+            <form id="pdfForm">
+                <div class="form-group">
+                    <label for="pdfPhone">Recipient Phone Number</label>
+                    <input type="text" id="pdfPhone" name="recipient_phone" placeholder="e.g. 923001234567" required>
+                </div>
+                <div class="form-group">
+                    <label for="pdfFile">Select PDF File</label>
+                    <input type="file" id="pdfFile" name="file" accept=".pdf" required>
+                </div>
+                <div class="form-group">
+                    <label for="pdfTime">Send Time (Optional)</label>
+                    <input type="datetime-local" id="pdfTime" name="send_time">
+                    <small>Leave blank for immediate sending.</small>
+                </div>
+                <button type="submit">Send PDF</button>
+            </form>
+            <div id="pdfResponse" class="response-msg"></div>
+        </div>
+    </div>
+
+    <script>
+        // Registration Script
+        document.getElementById('regForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const phone = document.getElementById('phone').value;
+            const msgDiv = document.getElementById('regResponse');
+            msgDiv.style.color = '#555';
+            msgDiv.textContent = 'Registering...';
+
+            try {
+                const response = await fetch('http://127.0.0.1:8000/register/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({ 'phone_number': phone })
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    msgDiv.style.color = '#25d366';
+                    msgDiv.textContent = data.message || 'Registered successfully!';
+                } else {
+                    msgDiv.style.color = '#d9534f';
+                    msgDiv.textContent = 'Registration failed.';
+                }
+            } catch (error) {
+                msgDiv.style.color = '#d9534f';
+                msgDiv.textContent = 'Server connection error!';
+            }
+        });
+
+        // Send Message Script
+        document.getElementById('msgForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const recipient = document.getElementById('recipientPhone').value;
+            const message = document.getElementById('messageText').value;
+            const sendTime = document.getElementById('msgTime').value;
+            const msgDiv = document.getElementById('msgResponse');
+            
+            msgDiv.style.color = '#555';
+            msgDiv.textContent = 'Processing message...';
+
+            const payload = {
+                'recipient_phone': recipient,
+                'message': message
+            };
+
+            if (sendTime) {
+                // Calendar ke format ko backend ke mutabiq adjust kiya
+                payload['send_time'] = sendTime.replace('T', ' ') + ':00';
+            }
+
+            try {
+                const response = await fetch('http://127.0.0.1:8000/whatsapp/send-message', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams(payload)
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    msgDiv.style.color = '#25d366';
+                    msgDiv.textContent = data.message || 'Message processed successfully!';
+                } else {
+                    msgDiv.style.color = '#d9534f';
+                    msgDiv.textContent = 'Failed to send message.';
+                }
+            } catch (error) {
+                msgDiv.style.color = '#d9534f';
+                msgDiv.textContent = 'Server connection error!';
+            }
+        });
+
+        // Send PDF Script
+        document.getElementById('pdfForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const recipient = document.getElementById('pdfPhone').value;
+            const fileInput = document.getElementById('pdfFile').files[0];
+            const sendTime = document.getElementById('pdfTime').value;
+            const msgDiv = document.getElementById('pdfResponse');
+            
+            if (!fileInput) {
+                msgDiv.style.color = '#d9534f';
+                msgDiv.textContent = 'Please select a PDF file.';
+                return;
+            }
+
+            msgDiv.style.color = '#555';
+            msgDiv.textContent = 'Processing PDF...';
+
+            const formData = new FormData();
+            formData.append('recipient_phone', recipient);
+            formData.append('file', fileInput);
+
+            if (sendTime) {
+                formData.append('send_time', sendTime.replace('T', ' ') + ':00');
+            }
+
+            try {
+                const response = await fetch('http://127.0.0.1:8000/whatsapp/send-pdf', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    msgDiv.style.color = '#25d366';
+                    msgDiv.textContent = data.message || 'PDF processed successfully!';
+                } else {
+                    msgDiv.style.color = '#d9534f';
+                    msgDiv.textContent = 'Failed to send PDF.';
+                }
+            } catch (error) {
+                msgDiv.style.color = '#d9534f';
+                msgDiv.textContent = 'Server connection error!';
+            }
+        });
+    </script>
+
+</body>
+</html>
